@@ -7,6 +7,7 @@
 // const csv = require("csv-parser");
 const fs = require("fs");
 const csv = require("fast-csv");
+const { resultS, resultE } = require("../messages/lead.messages");
 
 exports.uploadFileLead = (req, res) => {
   if (req.files) {
@@ -34,10 +35,15 @@ exports.uploadFileLead = (req, res) => {
               ]),
             ],
             (err, rows) => {
+              const result = {
+                codigo: 0,
+                filename: filename,
+                respuesta: "Success",
+            }
               console.log(
-                err ? "Err INSERT INTO api " + err : "Api" + " Added!"
+                err ? resultE + err : resultS 
               );
-              res.send(dataJson);
+              res.json( err ? resultE + err : resultS);
             }
           );
           fs.unlinkSync(__dirname + "/uploads/" + filename)
@@ -83,17 +89,10 @@ exports.uploadFileCSV = (req, res) => {
               ]),
             ],
             (err, rows) => {
-
-              const result = {
-                status: "ok",
-                filename: filename,
-                message: "Upload Successfully!",
-            }
               console.log(
-                err ? "Err INSERT INTO api " + err : "Api" + " Added! "
+                err ? resultE + err : resultS 
               );
-           
-            res.json(result);
+              res.json( err ? resultE + err : resultS);
             }
           );
         });
@@ -105,11 +104,23 @@ exports.uploadFileCSV = (req, res) => {
     })
 
   }catch(error){
-      const result = {
-          status: "fail",
-          filename: filename,
-          message: "Upload Error! message = " + error.message
-      }
-      res.json(result);
+      res.json(resultE);
   }
 }
+
+
+exports.uploadManual = (req, res) => {
+  req.getConnection((err, conn) => {
+    if (err) return res.send(err);
+    conn.query(
+      "INSERT INTO " + req.params.tabla + " set ?",
+      [req.body],
+      (err, rows) => {
+        console.log(
+          err ? resultE + err : resultS 
+        );
+        res.json( err ? resultE + err : resultS);
+      }
+    );
+  });
+};
