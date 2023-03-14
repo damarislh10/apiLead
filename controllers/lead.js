@@ -124,3 +124,53 @@ exports.uploadManual = (req, res) => {
     );
   });
 };
+
+
+exports.ConsultLeads = (req, res) => {
+  req.getConnection((err, conn) => {
+    if (err) return res.send(err);
+    conn.query(
+      "SELECT * FROM " +
+      req.params.tabla ,
+      (err, result) => {
+        console.log(
+          result.length == 0
+            ? 
+            err
+            :
+            " results: " +
+            result.length
+        );
+
+        console.log(
+          err ? resultE + err : resultS 
+        );
+        res.json(result);
+      }
+    );
+  });
+};
+
+
+exports.updateLead = (req, res) => {
+  req.getConnection((err, conn) => {
+    if (err) return res.send(err);
+    conn.query(
+      "UPDATE " + req.params.tabla + " set ? WHERE " + req.params.name + " = ?",
+      [req.body, req.params.value],
+      (err, result) => {
+        console.log(
+          err
+            ?
+            err
+            : "Actualizado!"
+        );
+
+        console.log(
+          err ? resultE + err : resultS 
+        );
+        res.json( err ? resultE + err : resultS);
+      }
+    );
+  });
+};
