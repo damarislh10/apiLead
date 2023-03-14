@@ -68,7 +68,6 @@ exports.uploadFileCSV = (req, res) => {
       })
       .on('end', () => {
         req.getConnection((err, conn) => {
-          console.log(customers)
           if (err) return res.send(err);
           conn.query(
             "INSERT INTO api (nombres ,apellidos ,cedula ,ciudad ,email ,tipo_tel ,telefono) VALUES ?",
