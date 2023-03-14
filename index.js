@@ -2,12 +2,20 @@ const express = require("express");
 const cors = require("cors");
 const mysql = require("mysql2");
 const conn = require("express-myconnection");
+const bodyparser = require('body-parser')
 const { connection } = require("./config.db.js");
 const routesGeneral = require("./routes/lead.routes");
 const upload = require('express-fileupload')
 const app= express();
 
 // 
+
+app.use(bodyparser.json())
+app.use(
+    bodyparser.urlencoded({
+      extended: true,
+    })
+  );
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
