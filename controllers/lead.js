@@ -35,11 +35,6 @@ exports.uploadFileLead = (req, res) => {
               ]),
             ],
             (err, rows) => {
-              const result = {
-                codigo: 0,
-                filename: filename,
-                respuesta: "Success",
-            }
               console.log(
                 err ? resultE + err : resultS 
               );
